@@ -1,5 +1,5 @@
 # PowerBI_DimDate
-An M Query to create a repeatable Date dimension table.
+An M Query to create a repeatable date dimension table.
 
 Rather than creating a table from scratch, this offers a quick way to create a date table for you to create relationships with.
 
