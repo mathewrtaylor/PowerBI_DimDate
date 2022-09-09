@@ -26,7 +26,7 @@ Congratulations, the hard work is done!!
 ![Rename Function](https://raw.githubusercontent.com/mathewrtaylor/PowerBI_DimDate/screenshots/DimDate_8.png?raw=true "Remember to rename this to something like DimDate, or what makes sense to you!")<br><br>
 
 This will create a table ready to go with the appropriate labels and data types selected!<br>
-![Output](https://raw.githubusercontent.com/mathewrtaylor/PowerBI_DimDate/screenshots/DimDate_8.png?raw=true "Here is an example of what the output will look like once done.")<br>
+![Output](https://raw.githubusercontent.com/mathewrtaylor/PowerBI_DimDate/screenshots/DimDate_9.png?raw=true "Here is an example of what the output will look like once done.")<br>
 
 ## Credits
 Direct inspiration from Devin Knight's query at: https://devinknightsql.com/2015/06/16/creating-a-date-dimension-with-power-query/
