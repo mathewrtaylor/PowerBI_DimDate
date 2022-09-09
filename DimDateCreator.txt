@@ -1,0 +1,73 @@
+//Create Date Dimension
+(StartDate as date, EndDate as date)=>
+
+let
+    //Capture the date range from the parameters
+    StartDate = #date(Date.Year(StartDate), Date.Month(StartDate), 
+    Date.Day(StartDate)),
+    EndDate = #date(Date.Year(EndDate), Date.Month(EndDate), 
+    Date.Day(EndDate)),
+
+    //Get the number of dates that will be required for the table
+    GetDateCount = Duration.Days(EndDate - StartDate),
+
+    //Take the count of dates and turn it into a list of dates
+    GetDateList = List.Dates(StartDate, GetDateCount, 
+    #duration(1,0,0,0)),
+
+    //Convert the list into a table
+    DateListToTable = Table.FromList(GetDateList, 
+    Splitter.SplitByNothing(), {"Date"}, null, ExtraValues.Error),
+    
+    //Create various date attributes from the date column
+    //Add Year Column
+    YearNumber = Table.AddColumn(DateListToTable, "Year", 
+    each Date.Year([Date])),
+
+    //Add Fiscal Year Column
+    FiscalYearNumber = Table.AddColumn(YearNumber, "Fiscal Year", 
+    each if Date.Month([Date]) > 7 then Date.Year([Date]) else Date.Year([Date]) - 1),
+
+    //Add Quarter Column
+    QuarterNumber = Table.AddColumn(FiscalYearNumber , "Quarter", 
+    each "Q" & Number.ToText(Date.QuarterOfYear([Date]))),
+
+    //Add Fiscal Quarter Column
+    FiscalQuarterNumber = Table.AddColumn(QuarterNumber, "Fiscal Quarter", 
+    each if Date.Month([Date]) > 6 then "Q" & Number.ToText(Date.QuarterOfYear([Date])-2)
+     else "Q" & Number.ToText(Date.QuarterOfYear([Date])+2)),
+
+    //Add Week Number Column
+    WeekNumber= Table.AddColumn(FiscalQuarterNumber , "Week Number", 
+    each Date.WeekOfYear([Date])),
+
+    //Add Fiscal Quarter Column
+    FiscalWeekNumber = Table.AddColumn(WeekNumber, "Fiscal Week Number", 
+    each if Date.WeekOfYear([Date]) > 26 then Date.WeekOfYear([Date])-26
+     else Date.WeekOfYear([Date])+26),
+
+    //Add Month Number Column
+    MonthNumber = Table.AddColumn(FiscalWeekNumber, "Month Number", 
+    each Date.Month([Date])),
+
+    //Add Fiscal Quarter Column
+    FiscalMonthNumber = Table.AddColumn(MonthNumber, "Fiscal Month Number", 
+    each if Date.Month([Date]) > 6 then Date.Month([Date]) - 6
+     else Date.Month([Date]) + 6),
+
+    //Add Month Name Column
+    MonthName = Table.AddColumn(FiscalMonthNumber, "Month", 
+    each Date.ToText([Date],"MMMM")),
+
+    //Add Day of Week Column
+    DayOfWeek = Table.AddColumn(MonthName , "Day of Week", 
+    each Date.ToText([Date],"dddd")),
+
+    //Some Post Processing to change data types
+    #"Post_Processing" = Table.TransformColumnTypes(#"DayOfWeek",{{"Date", type date}, 
+    {"Year", Int64.Type},{"Fiscal Year", Int64.Type}, {"Quarter", type text},{"Fiscal Quarter", type text}, 
+    {"Week Number", Int64.Type}, {"Fiscal Week Number", Int64.Type}, {"Month Number", Int64.Type}, 
+    {"Fiscal Month Number", Int64.Type}, {"Month", type text}, {"Day of Week", type text}})
+
+in
+    #"Post_Processing"
