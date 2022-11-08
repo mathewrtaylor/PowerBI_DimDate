@@ -63,11 +63,15 @@ let
     DayOfWeek = Table.AddColumn(MonthName , "Day of Week", 
     each Date.ToText([Date],"dddd")),
 
+    //Add Day of Week # Column
+    DayOfWeekNo = Table.AddColumn(DayOfWeek, "Day of Week #", 
+    each Date.DayOfWeek([Date], Day.Sunday)),
+
     //Some Post Processing to change data types
-    #"Post_Processing" = Table.TransformColumnTypes(#"DayOfWeek",{{"Date", type date}, 
+    #"Post_Processing" = Table.TransformColumnTypes(#"DayOfWeekNo",{{"Date", type date}, 
     {"Year", Int64.Type},{"Fiscal Year", Int64.Type}, {"Quarter", type text},{"Fiscal Quarter", type text}, 
     {"Week Number", Int64.Type}, {"Fiscal Week Number", Int64.Type}, {"Month Number", Int64.Type}, 
-    {"Fiscal Month Number", Int64.Type}, {"Month", type text}, {"Day of Week", type text}})
+    {"Fiscal Month Number", Int64.Type}, {"Month", type text}, {"Day of Week", type text}, {"Day of Week #", Int64.Type}})
 
 in
     #"Post_Processing"
